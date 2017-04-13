@@ -7,7 +7,7 @@ define('FILE_ENCRYPTION_BLOCKS', 10000);
  * Date: 18/03/2017
  * Time: 15:17
  */
-class AES_Encryption
+class AES_Encryption extends CI_Model
 {
     public function encrypt($source, $key)
     {
@@ -36,8 +36,10 @@ class AES_Encryption
             $error = true;
         }
 
-        unlink($source);
-        return $error ? false : $dest;
+        if (!unlink($source))
+            $error = true;
+
+        return $error ? false : true;
     }
 
     public function decrypt($source, $key)
@@ -67,7 +69,25 @@ class AES_Encryption
             $error = true;
         }
 
-        unlink($source);
-        return $error ? false : $dest;
+        // Save content and delete non encrypted file
+        $file_content = file_get_contents($dest); // Read the file's contents
+
+        if (!unlink($dest))
+            $error = true;
+
+        if (!$error) {
+            // Get file extension
+            $pieces = explode(".", $dest);
+            array_shift($pieces);
+            $extension = null;
+            foreach ($pieces as $piece) {
+                $extension = $extension . '.' . $piece;
+            }
+
+            // Download file
+            force_download('secure_download' . $extension, $file_content);
+        }
+
+        return $error ? false : true;
     }
 }
