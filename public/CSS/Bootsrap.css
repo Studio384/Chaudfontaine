@@ -5499,14 +5499,18 @@ button.list-group-item-danger.active:focus {
 .panel-title > .small > a {
     color: inherit;
 }
-div.login{
-    float: right;
-    margin-right: 20%;
+
+@media (min-width: 768px) {
+    div.login{
+        float: right;
+        margin-right: 20%;
+    }
+    div.register{
+        float: right;
+        margin-right: 20%;
+    }
 }
-div.register{
-    float: left;
-    margin-left: 20%;
-}
+
 div.logincontainer{
     margin-top: 10%;
 }

@@ -1,0 +1,44 @@
+{% extends "master.twig" %}
+{% block stylesheet %}
+    <link href="{{ base_url('CSS/BaseStyle.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="logincontainer">
+    <div class="register">
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Register</legend>
+            </fieldset>
+            <div class="form-group">
+                <label for="registermail" class="col-lg-2 control-label">Email</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="registermail" placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="registerpassword" class="col-lg-2 control-label">Password</label>
+                <div class="col-lg-10">
+                    <input type="password" class="form-control" id="registerpassword" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="voornaam" class="col-lg-2 control-label">Voornaam</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="voornaam" placeholder="voornaam">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="achternaam" class="col-lg-2 control-label">Achternaam</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="achternaam" placeholder="Achternaam">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary"><a href="http://localhost/Project/Chaudfontaine/public/login" class="btn-primary">Submit</a></button>
+                </div>
+            </div>
+        </form>
+    </div>
+        </div>
+{% endblock %}

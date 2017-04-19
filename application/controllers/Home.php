@@ -18,4 +18,7 @@ class Home extends MY_Controller
     public function userpage(){
         $this ->display($this->dir.'Userpage');
     }
+    public function createAccount(){
+        $this->display($this->dir.'CreateAccount');
+    }
 }

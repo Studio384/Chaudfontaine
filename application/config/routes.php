@@ -57,6 +57,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['home'] = 'Home/homepage';
 $route['login'] ='Home/login';
 $route['user'] = 'Home/userpage';
+$route['createAccount'] = 'Home/createAccount';
 // UploadController
 $route['upload'] = 'Upload/index';
 $route['upload/do_upload'] = 'Upload/do_upload';
