@@ -61,7 +61,6 @@ $autoload['packages'] = array();
 $autoload['libraries'] = array(
     'twig',
     'session',
-    'database',
 );
 
 /*
@@ -94,7 +93,11 @@ $autoload['drivers'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 $autoload['helper'] = array(
+
+    'url',
+
     'download'
+
 );
 
 /*

@@ -1,0 +1,79 @@
+{% extends "master.twig" %}
+{% block stylesheet %}
+    <link href="{{ base_url('CSS/BaseStyle.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Chaudfontaine</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">About</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://localhost/Project/Chaudfontaine/public/login">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="jumbotron">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#send" data-toggle="tab" aria-expanded="true">Send</a></li>
+            <li class=""><a href="#recieve" data-toggle="tab" aria-expanded="false">Receive</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="send">
+                <form class="form-horizontal">
+                    <div class="form-style">
+                    <fieldset>
+                        <div class="formleft">
+                        <div class="form-group">
+                            <label for="inputFile" class="col-lg-2 control-label">File</label>
+                            <div class="col-lg-10">
+                                <input type="file" class="form-control" id="inputFile" placeholder="File">
+                            </div>
+                            <label for="selecteduser" class="col-lg-2 control-label">Select user</label>
+                            <div class="col-lg-10">
+                                <select multiple="" class="form-control">
+                                    <option>user 1</option>
+                                    <option>user 2</option>
+                                    <option>user 3</option>
+                                    <option>user 4</option>
+                                    <option>user 5</option>
+                                </select>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="formright">
+                            <div class="form-group">
+                                <label for="encrypte" class="col-lg-2 control-label">Key</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" id="encrypte" placeholder="Key">
+                            </div>
+                        </div>
+                            </div>
+                        <div class="form-group">
+
+                        <div class="col-lg-10">
+                            <input type="submit" class="btn btn-primary" id="submit" value="Submit ">
+                        </div>
+                        </div>
+                    </fieldset>
+                    </div>
+                </form>
+                </div>
+            <div class="tab-pane fade" id="recieve">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
