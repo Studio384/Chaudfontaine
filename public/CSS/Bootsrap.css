@@ -4184,6 +4184,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     margin-bottom: 20px;
     border: 1px solid transparent;
 }
+.form-style{
+    margin-top: 10px;
+}
 @media (min-width: 768px) {
     .navbar {
         border-radius: 4px;
