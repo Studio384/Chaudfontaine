@@ -53,9 +53,18 @@ $route['default_controller'] = 'Welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+
 $route['home'] = 'Home/homepage';
 $route['login'] ='Home/login';
 $route['user'] = 'Home/userpage';
 // UploadController
 $route['upload'] = 'Upload/index';
 $route['upload/do_upload'] = 'Upload/do_upload';
+
+// File_ExchangeController
+/*
+$route['upload'] = 'File_Exchange/index';
+$route['upload/do_upload'] = 'File_Exchange/upload';
+$route['download'] = 'File_Exchange/download';
+$route['check'] = 'File_Exchange/check_file';
+*/

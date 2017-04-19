@@ -11,6 +11,6 @@ class Welcome extends MY_Controller {
 
 	public function index()
 	{
-        $this->display($this->dir . 'index');
+
 	}
 }
