@@ -21,26 +21,54 @@ class File_Exchange extends CI_Controller
 
     public function upload()
     {
+        // Get ID's and return in array
+        $users = array('');
+
+        // Set private key null
+        $my_private_key = null;
+
+        // Settings for private key file upload
+        $config['upload_path'] = './uploaded_files/';
+        $config['allowed_types'] = 'txt';
+
+        // Upload txt file, read it, delete it
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload('privateKey')) {
+            $error = array('error' => $this->upload->display_errors());
+            // File error
+        } else {
+            $data = $this->upload->data();
+            $file_path = $data['full_path'];
+            $my_private_key = file_get_contents($file_path, FILE_USE_INCLUDE_PATH);
+
+            // Delete txt file on server
+            if ($this->delete($file_path) == EXIT_ERROR) {
+                // Show error
+            } else {
+                // Show error but file is secure
+            }
+        }
+        // Ending txt file upload
+
+        // Begin zip upload
+        // Settings for zip file upload
         $config['upload_path'] = './uploaded_files/';
         $config['allowed_types'] = 'zip';
+        $config['encrypt_name'] = true;
 
         //$config['max_size'] = 100;
         //$config['max_width'] = 1024;
         //$config['max_height'] = 768;
 
-        $config['encrypt_name'] = true;
-
         $this->load->library('upload', $config);
 
+        // Upload and encrypt zip file
         if (!$this->upload->do_upload('userfile')) {
             $error = array('error' => $this->upload->display_errors());
-
-            $this->load->view('upload_form', $error);
+            // File error
         } else {
             $data = $this->upload->data();
             $file_path = $data['full_path'];
-            $my_private_key = null;
-            $users = array('');
 
             $this->load->model('File_Encryption', 'file');
             $result = $this->file->encrypt($file_path, $my_private_key, $users);
@@ -57,7 +85,7 @@ class File_Exchange extends CI_Controller
                     // Encryption failed
                 }
 
-
+                // 1 or more errors --> delete file on server
                 if ($this->delete($file_path) == EXIT_ERROR) {
                     // Show error
                 } else {
@@ -65,6 +93,7 @@ class File_Exchange extends CI_Controller
                 }
             }
         }
+        // Ending zip file upload
     }
 
     public function download()
