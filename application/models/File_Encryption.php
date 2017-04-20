@@ -84,7 +84,7 @@ class File_Encryption extends CI_Model
             if (!$this->AES->decrypt($file['file_name'], $AES_key))
                 return EXIT_ERROR;
 
-            if(($this->check_file($file_id, $file['file_hash']) == EXIT_ERROR))
+            if(($this->fileCheck($file_id, $file['file_hash']) == EXIT_ERROR))
                 return EXIT_ERROR;
 
             return EXIT_SUCCESS;
@@ -93,7 +93,7 @@ class File_Encryption extends CI_Model
         }
     }
 
-    public function check_file($file_id, $my_hash)
+    public function fileCheck($file_id, $my_hash)
     {
         // Get file information from database
         $this->db->where('id', $file_id);

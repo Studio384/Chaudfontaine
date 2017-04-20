@@ -6,17 +6,13 @@
  * Date: 18/03/2017
  * Time: 14:57
  */
-class File_Exchange extends CI_Controller
+class FileExchangeController extends MY_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->helper(array('form', 'url'));
-    }
+    private $dir = 'fileExchange/';
 
     public function index()
     {
-        $this->load->view('upload_form', array('error' => ' '));
+        $this->display($this->dir . 'upload');
     }
 
     public function upload()
@@ -63,7 +59,7 @@ class File_Exchange extends CI_Controller
         $this->load->library('upload', $config);
 
         // Upload and encrypt zip file
-        if (!$this->upload->do_upload('userfile')) {
+        if (!$this->upload->do_upload('file')) {
             $error = array('error' => $this->upload->display_errors());
             // File error
         } else {
@@ -114,20 +110,18 @@ class File_Exchange extends CI_Controller
         }
     }
 
-    public function check_file()
+    public function fileCheck()
     {
         $file_id = 0;
         $my_hash = null;
 
         $this->load->model('File_Encryption', 'file');
-        $result = $this->file->check_file($file_id, $my_hash);
+        $result = $this->file->fileCheck($file_id, $my_hash);
 
-        if($result == EXIT_SUCCESS)
-        {
+        if ($result == EXIT_SUCCESS) {
             // show success
             echo 'success';
-        }elseif($result == EXIT_ERROR)
-        {
+        } elseif ($result == EXIT_ERROR) {
             echo 'test';
         }
     }

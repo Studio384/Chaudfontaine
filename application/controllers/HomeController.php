@@ -1,17 +1,20 @@
 <?php
+
 /**
  * Created by PhpStorm.
- * User: 11500613
- * Date: 29/03/2017
- * Time: 11:36
+ * User: 11400277
+ * Date: 20/04/2017
+ * Time: 10:20
  */
-class Home extends MY_Controller
+class HomeController extends MY_Controller
 {
-    private $dir = 'HTML/';
+    private $dir = 'home/';
 
-    public function homepage(){
-       $this->display($this->dir . 'Welcome');
+    public function index()
+    {
+        $this->display($this->dir . 'index');
     }
+
     public function login(){
         $this->display($this->dir.'Login');
     }
