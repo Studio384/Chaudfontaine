@@ -1,11 +1,24 @@
 <?php
 
 class AuthModel extends CI_Model {
-    // Database name
+    /**
+     * Database table name
+     * @var string
+     */
     private $table = 'users';
 
-    // Array with userdata if successful
+    /**
+     * If the function ends with EXIT_SUCCESS but date is needed
+     * It wil be  put in this variable
+     * @var array
+     */
     private $userdata = array();
+
+    /**
+     * Hashing cost
+     * @var int
+     */
+    private $cost = 12;
 
     /**
      * User login
@@ -32,7 +45,7 @@ class AuthModel extends CI_Model {
                         $newHash = password_hash($password, PASSWORD_DEFAULT);
 
                         $this->db->set('password', $newHash);
-                        $this->db->where('user_id', $row['id']);
+                        $this->db->where('id', $row['id']);
                         $this->db->update($this->table);
                     }
 
@@ -42,6 +55,7 @@ class AuthModel extends CI_Model {
                     $this->db->update($this->table);
 
                     unset($row['password']);
+                    unset($row['public_key']);
                     $row['access_token'] = $access_token;
                     $this->userdata = $row;
                     return EXIT_SUCCESS;
@@ -81,6 +95,9 @@ class AuthModel extends CI_Model {
             'updated_at' => date('Y-m-d H:i:s')
         );
 
+        $this->db->insert($this->table, $dataDB);
+
+        /*
         $dataEmail = array(
             'code' => $code
         );
@@ -103,7 +120,7 @@ class AuthModel extends CI_Model {
         $this->email->message($this->load->view('email/activation', $dataEmail, TRUE));
 
         if ($this->email->send()) {
-            //$this->db->insert($this->table, $dataDB);
+            $this->db->insert($this->table, $dataDB);
             return EXIT_SUCCESS;
         } else {
             echo '<pre>';
@@ -112,6 +129,7 @@ class AuthModel extends CI_Model {
             exit;
             return EXIT_ERROR;
         }
+        */
     }
 
     /**
@@ -129,10 +147,15 @@ class AuthModel extends CI_Model {
             $row = $query->row_array();
             $new_password = password_hash($new_password, PASSWORD_DEFAULT, ['cost' => $this->cost]);
 
-            $access_token = $this->generate_random_string();
+            $access_token = 'app/' . $this->generate_random_string();
+
+            // Generate key pair
+            $this->load->model('RSA_Encryption', 'RSA');
+            $keys = $this->RSA->generate_keys();
 
             $this->db->set('password', $new_password);
             $this->db->set('activation_code', '');
+            $this->db->set('public_key', $keys['public']);
             $this->db->set('access_token', $access_token);
             $this->db->set('updated_at', date('Y-m-d H:i:s'));
             $this->db->set('blocked', false);
@@ -141,6 +164,8 @@ class AuthModel extends CI_Model {
 
             unset($row['password']);
             $row['access_token'] = $access_token;
+            $row['private_key'] = $keys['private'];
+
             $this->userdata = $row;
 
             return EXIT_SUCCESS;

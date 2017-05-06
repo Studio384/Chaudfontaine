@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Created by PhpStorm.
@@ -10,119 +11,110 @@ class FileExchangeController extends MY_Controller
 {
     private $dir = 'fileExchange/';
 
-    public function index()
-    {
-        $this->display($this->dir . 'upload');
-    }
-
     public function upload()
     {
-        // Get ID's and return in array
-        $users = array('');
+        $this->form_validation->set_rules('users', '', 'trim|required');
+        $this->form_validation->set_rules('privateKey', '', 'trim|required');
 
-        // Set private key null
-        $my_private_key = null;
+        if ($this->form_validation->run() == true) {
+            // Make array of multiple emails
+            $users = explode(',', $this->input->post('users'));
+            unset($users[count($users) - 1]);
+            $my_private_key = $this->input->post('privateKey');
 
-        // Settings for private key file upload
-        $config['upload_path'] = './uploaded_files/';
-        $config['allowed_types'] = 'txt';
+            // Begin zip upload
+            // Settings for zip file upload
+            $config['upload_path'] = './uploaded_files/';
+            $config['allowed_types'] = 'zip';
 
-        // Upload txt file, read it, delete it
-        $this->load->library('upload', $config);
-        if (!$this->upload->do_upload('privateKey')) {
-            $error = array('error' => $this->upload->display_errors());
-            // File error
-        } else {
-            $data = $this->upload->data();
-            $file_path = $data['full_path'];
-            $my_private_key = file_get_contents($file_path, FILE_USE_INCLUDE_PATH);
+            $this->load->library('upload', $config);
 
-            // Delete txt file on server
-            if ($this->delete($file_path) == EXIT_ERROR) {
-                // Show error
+            // Upload and encrypt zip file
+            if (!$this->upload->do_upload('file')) {
+                $data['errors'][] = $this->upload->display_errors();
+                // File error
             } else {
-                // Show error but file is secure
+                $data = $this->upload->data();
+                $file_path = $data['full_path'];
+
+                $this->load->model('File_Encryption', 'file');
+                $result = $this->file->encrypt($file_path, $my_private_key, $users);
+
+                if ($result == EXIT_SUCCESS) {
+                    // show success
+                    echo 'success';
+                } else {
+                    if ($result == EXIT_USER_INPUT) {
+                        $data['errors'][] = "Een user tussen de lijst bestaat niet.";
+                    }
+
+                    if ($result == EXIT_ERROR) {
+                        $data['errors'][] = "Encryption failed, waarschijnlijk een verkeerde private key.";
+                    }
+
+                    // 1 or more errors --> delete file on server
+                    if ($this->delete($file_path) == EXIT_ERROR) {
+                        $data['errors'][] = "Probleem met file te deleten.";
+                    } else {
+                        $data['errors'][] = "file deleted succesfuly.";
+                    }
+                }
             }
+            // Ending zip file upload
         }
-        // Ending txt file upload
-
-        // Begin zip upload
-        // Settings for zip file upload
-        $config['upload_path'] = './uploaded_files/';
-        $config['allowed_types'] = 'zip';
-        $config['encrypt_name'] = true;
-
-        //$config['max_size'] = 100;
-        //$config['max_width'] = 1024;
-        //$config['max_height'] = 768;
-
-        $this->load->library('upload', $config);
-
-        // Upload and encrypt zip file
-        if (!$this->upload->do_upload('file')) {
-            $error = array('error' => $this->upload->display_errors());
-            // File error
+        if (isset($data['errors'])) {
+            $this->display($this->dir . 'uploadErrors', $data);
         } else {
-            $data = $this->upload->data();
-            $file_path = $data['full_path'];
+            $this->display($this->dir . 'upload');
+        }
+    }
+
+    public function download($id = null)
+    {
+        if (isset($id)) {
+            $file_id = $id;
+
+            $this->form_validation->set_rules('privateKey', '', 'trim|required');
+            if ($this->form_validation->run() == true) {
+                $my_private_key = $this->input->post('privateKey');
+
+                $this->load->model('File_Encryption', 'file');
+                $result = $this->file->decrypt($file_id, $my_private_key);
+
+                if ($result == EXIT_SUCCESS) {
+                    // show success
+                    echo 'success';
+                } elseif ($result == EXIT_USER_INPUT) {
+                    // File not found
+                } elseif ($result == EXIT_ERROR) {
+                    // Decryption error (error in code or wrong keys) 90% = wrong key
+                }
+            }
+            $this->display($this->dir . 'download');
+        } else {
+            $this->db->where('destination_user_id', 0);
+            $data['files'] = $this->db->get('file_exchange')->result_array();
+
+            $this->display($this->dir . 'downloadList', $data);
+        }
+    }
+
+    public function fileCheck($id)
+    {
+        $file_id = $id;
+        $this->form_validation->set_rules('md5', '', 'trim|required');
+        if ($this->form_validation->run() == true) {
+            $my_hash = $this->input->post('md5');
 
             $this->load->model('File_Encryption', 'file');
-            $result = $this->file->encrypt($file_path, $my_private_key, $users);
+            $result = $this->file->fileCheck($file_id, $my_hash);
 
             if ($result == EXIT_SUCCESS) {
                 // show success
                 echo 'success';
-            } else {
-                if ($result == EXIT_USER_INPUT) {
-                    // Show error user does not exist
-                }
-
-                if ($result == EXIT_ERROR) {
-                    // Encryption failed
-                }
-
-                // 1 or more errors --> delete file on server
-                if ($this->delete($file_path) == EXIT_ERROR) {
-                    // Show error
-                } else {
-                    // Show error but file is secure
-                }
+            } elseif ($result == EXIT_ERROR) {
+                echo 'test';
             }
-        }
-        // Ending zip file upload
-    }
-
-    public function download()
-    {
-        $file_id = 0;
-        $my_private_key = null;
-
-        $this->load->model('File_Encryption', 'file');
-        $result = $this->file->decrypt($file_id, $my_private_key);
-
-        if ($result == EXIT_SUCCESS) {
-            // show success
-            echo 'success';
-        } elseif ($result == EXIT_USER_INPUT) {
-            // File not found
-        } elseif ($result == EXIT_ERROR) {
-            // Decryption error (error in code or wrong keys) 90% = wrong key
-        }
-    }
-
-    public function fileCheck()
-    {
-        $file_id = 0;
-        $my_hash = null;
-
-        $this->load->model('File_Encryption', 'file');
-        $result = $this->file->fileCheck($file_id, $my_hash);
-
-        if ($result == EXIT_SUCCESS) {
-            // show success
-            echo 'success';
-        } elseif ($result == EXIT_ERROR) {
-            echo 'test';
         }
     }
 

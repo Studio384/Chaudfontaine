@@ -61,7 +61,8 @@ $autoload['packages'] = array();
 $autoload['libraries'] = array(
     'twig',
     'session',
-    'database'
+    'database',
+    'form_validation'
 );
 
 /*

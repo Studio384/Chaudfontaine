@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Created by PhpStorm.
@@ -23,5 +24,13 @@ class HomeController extends MY_Controller
     }
     public function createAccount(){
         $this->display($this->dir.'CreateAccount');
+    }
+
+    public function userdata(){
+        print_r($this->session->userdata());
+    }
+
+    public function des(){
+        $this->session->sess_destroy();
     }
 }

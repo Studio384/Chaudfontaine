@@ -1,8 +1,7 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-if ( ! defined( 'BASEPATH' ) ) exit( 'No direct script access allowed' );
-
-class AuthController extends CI_Controller {
+class AuthController extends MY_Controller {
     private $dir = 'auth/';
 
     // Validate login data
@@ -18,12 +17,10 @@ class AuthController extends CI_Controller {
             $this->load->model('AuthModel', 'auth');
             $status = $this->auth->login($email, $password);
 
-            $this->language_load($this->dir . 'login');
-
             if ($status == EXIT_ERROR) {
-                $data['error'] = $this->lang->line('login_error_input');
+                $data['error'] = 'Gebruikersnaam en/of wachtwoord is fout.';
             } elseif ($status == EXIT_ERROR_ACCOUNT_BLOCKED) {
-                $data['error'] = $this->lang->line('login_error_blocked');
+                $data['error'] = 'Dit account is nog niet geactiveerd. Activeer het via de email.';
             } elseif ($status == EXIT_SUCCESS) {
                 $this->session->set_userdata($this->auth->get_data());
 
@@ -39,16 +36,16 @@ class AuthController extends CI_Controller {
     public function register()
     {
         $this->form_validation->set_rules('email', '', 'trim|required|valid_email|max_length[100]|is_unique[users.email]');
-        $this->form_validation->set_rules('given_name', '', 'trim|required|max_length[50]');
-        $this->form_validation->set_rules('family_name', '', 'trim|required|max_length[50]');
+        $this->form_validation->set_rules('first_name', '', 'trim|required|max_length[50]');
+        $this->form_validation->set_rules('last_name', '', 'trim|required|max_length[50]');
 
         if ($this->form_validation->run() == true) {
             $email = $this->input->post('email');
-            $given_name = $this->input->post('given_name');
-            $family_name = $this->input->post('family_name');
+            $first_name = $this->input->post('first_name');
+            $last_name = $this->input->post('last_name');
 
             $this->load->model('AuthModel', 'auth');
-            $status = $this->auth->register($email, $given_name, $family_name);
+            $status = $this->auth->register($email, $first_name, $last_name);
 
             if ($status == EXIT_ERROR) {
                 $data['error'] = 'Email niet verzonden';
@@ -76,19 +73,17 @@ class AuthController extends CI_Controller {
             if ($status == EXIT_ERROR) {
                 $data['error'] = 'Activatie kon niet worden voltooid';
             } elseif ($status == EXIT_SUCCESS) {
-                $this->session->set_userdata($this->auth->get_data());
+                $userdata = $this->auth->get_data();
+                $private_key = $userdata['private_key'];
+                unset($userdata['private_key']);
+                $this->session->set_userdata($userdata);
 
                 $this->session->set_flashdata('main_success', 'Activatie voltooid');
+                force_download('private_key.txt', $private_key);
                 redirect(base_url());
             }
         }
 
         $this->display($this->dir . 'activate', (isset($data)) ? $data : array());
-    }
-
-    // Reset the password
-    public function reset_password()
-    {
-        $this->display($this->dir . 'reset_password');
     }
 }

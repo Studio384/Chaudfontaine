@@ -53,15 +53,22 @@ $route['default_controller'] = 'HomeController';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-// HomeController
-$route['index'] = 'HomeController/index';
-$route['login'] ='HomeController/login';
-$route['user'] = 'HomeController/userpage';
-$route['createAccount'] = 'HomeController/createAccount';
+// AuthController
+$route['login'] = 'AuthController/login';
+$route['register'] ='AuthController/register';
+$route['activate/(:any)'] = 'AuthController/activate/$1';
 
 // FileExchangeController
-$route['upload'] = 'FileExchangeController/index';
+$route['upload'] = 'FileExchangeController/upload';
 $route['rest/get_users'] = 'RestController/get_users';
+$route['download'] = 'FileExchangeController/download';
+$route['download/(:num)'] = 'FileExchangeController/download/$1';
+$route['check/(:num)'] = 'FileExchangeController/fileCheck/$1';
+
+
+// HomeController
+$route['userdata'] = 'HomeController/userdata';
+$route['userdata/des'] = 'HomeController/des';
 
 
 // File_ExchangeController

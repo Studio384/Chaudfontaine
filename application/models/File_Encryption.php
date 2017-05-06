@@ -35,10 +35,16 @@ class File_Encryption extends CI_Model
         if (($enc_hash = $this->RSA->encrypt($hash, $my_private_key, true)) == EXIT_ERROR)
             return EXIT_ERROR;
 
-        // Encrypt key with destination public key
+        // Start db trans
+        $this->db->trans_start();
+
         foreach ($destination_users as $user) {
+            // Remove spaces
+            $user = str_replace(' ', '', $user);
             // Get public key from database
-            if ($destination_public_key = $this->get_user_public_key($user)) {
+            $userInfo = $this->get_user_information($user);
+            $destination_public_key = $userInfo['public_key'];
+            if ($destination_public_key != false) {
                 // Encrypt
                 if (($key = $this->RSA->encrypt($AES_key, $destination_public_key, false)) == EXIT_ERROR)
                     return EXIT_ERROR;
@@ -47,7 +53,7 @@ class File_Encryption extends CI_Model
                 $dataDB = array(
                     'file_name' => $file,
                     'origin_user_id' => '1',
-                    'destination_user_id' => $user,
+                    'destination_user_id' => $userInfo['id'],
                     'enc_key' => $key,
                     'file_hash' => $enc_hash,
                     'upload_date' => date('Y-m-d H:i:s')
@@ -55,10 +61,12 @@ class File_Encryption extends CI_Model
 
                 $this->db->insert($this->table, $dataDB);
             } else {
+                $this->db->trans_rollback();
                 return EXIT_USER_INPUT;
             }
         }
 
+        $this->db->trans_complete();
         return EXIT_SUCCESS;
     }
 
@@ -124,18 +132,21 @@ class File_Encryption extends CI_Model
         }
     }
 
-    private function get_user_public_key($id)
+    private function get_user_information($id)
     {
-        $db = 'users';
+        if(!is_numeric($id))
+            $query = $this->db->query("SELECT public_key FROM users WHERE email='". $id ."';");
+        else
+            $query = $this->db->query("SELECT public_key FROM users WHERE id='". $id ."';");
 
-        $this->db->where('id', $id);
-        $query = $this->db->get($db);
-
-        // Check if record exists
-        if ($query->num_rows()) {
-            $row = $query->row_array();
-            return $row['public_key'];
-        } else {
+        if($query->num_rows())
+        {
+            $row = $query->row();
+            $data['public_key'] = $row->public_key;
+            $data['id'] = $row->id;
+            return $data;
+        }else {
+            echo $query->num_rows();
             return false;
         }
     }

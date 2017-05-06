@@ -1,70 +1,67 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+{% extends "master.twig" %}
 
-    <link rel="stylesheet" href="{{ base_url('css/jquery-ui.min.css') }}"/>
-    <link rel="stylesheet" href="{{ base_url('css/jquery-ui.structure.css') }}"/>
-    <link rel="stylesheet" href="{{ base_url('css/jquery-ui.theme.css') }}"/>
-</head>
-<body>
+{% block content %}
 
-{{ form_open('',{'enctype': 'multipart/form-data'}) }}
-<input type="file" name="file"/>
-<input type="file" name="privateKey"/>
-<br><br><br>
-<input type="text" name="users" id="users" autocomplete="on"/>
-{{ form_close() }}
+    {% set error = error %}
+    <div class="alert alert-{{ error ? 'warning' : 'info' }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+        {{ error ? error : "Bestanden verzenden" }}
+    </div>
+
+    {{ form_open('',{'enctype': 'multipart/form-data'}) }}
+    File <input type="file" name="file"/><br><br>
+    Key <textarea name="privateKey" id="" cols="30" rows="10"></textarea>
+    <br><br><br>
+    <input type="text" name="users" id="users" autocomplete="on"/>
+    <input type="submit" name="Verzenden">
+    {{ form_close() }}
 
 
-<script src="{{ base_url('js/jquery-3.2.1.min.js') }}"></script>
-<script src="{{ base_url('js/jquery-ui.min.js') }}"></script>
-<script>
-    $(function () {
-        function split(val) {
-            return val.split(/,\s*/);
-        }
+{% endblock %}
 
-        function extractLast(term) {
-            return split(term).pop();
-        }
+{% block jsScript %}
+    <script src="{{ base_url('js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ base_url('js/jquery-ui.min.js') }}"></script>
+    <script>
+        $(function () {
+            function split(val) {
+                return val.split(/,\s*/);
+            }
 
-        $("#users")
-        // don't navigate away from the field on tab when selecting an item
-            .on("keydown", function (event) {
-                if (event.keyCode === $.ui.keyCode.TAB &&
-                    $(this).autocomplete("instance").menu.active) {
-                    event.preventDefault();
-                }
-            })
-            .autocomplete({
-                minLength: 0,
-                source: function (request, response) {
-                    $.getJSON("{{ base_url('rest/get_users') }}", {term: extractLast(request.term), input: $('#users').val()}, response);
-                },
-                focus: function () {
-                    // prevent value inserted on focus
-                    return false;
-                },
-                select: function (event, ui) {
-                    var terms = split(this.value);
-                    // remove the current input
-                    terms.pop();
-                    // add the selected item
-                    terms.push(ui.item.value);
-                    // add placeholder to get the comma-and-space at the end
-                    terms.push("");
-                    this.value = terms.join(", ");
-                    return false;
-                }
-            });
-    });
-</script>
+            function extractLast(term) {
+                return split(term).pop();
+            }
 
-
-</body>
-</html>
+            $("#users")
+            // don't navigate away from the field on tab when selecting an item
+                .on("keydown", function (event) {
+                    if (event.keyCode === $.ui.keyCode.TAB &&
+                        $(this).autocomplete("instance").menu.active) {
+                        event.preventDefault();
+                    }
+                })
+                .autocomplete({
+                    minLength: 0,
+                    source: function (request, response) {
+                        $.getJSON("{{ base_url('rest/get_users') }}", {term: extractLast(request.term), input: $('#users').val()}, response);
+                    },
+                    focus: function () {
+                        // prevent value inserted on focus
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        var terms = split(this.value);
+                        // remove the current input
+                        terms.pop();
+                        // add the selected item
+                        terms.push(ui.item.value);
+                        // add placeholder to get the comma-and-space at the end
+                        terms.push("");
+                        this.value = terms.join(", ");
+                        return false;
+                    }
+                });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "master.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-xs-10 col-md-offset-3 col-xs-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Register</strong>
+                </div>
+                <div class="panel-body">
+                    {% set error = error %}
+                    <div class="alert alert-{{ error ? 'warning' : 'info' }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        {{ error ? error : "Registreer je door onderstaand formulier in te vullen." }}
+                    </div>
+
+                    {{ form_open() }}
+                    {% set error = form_error("email", "<p class='text-danger'>", '</p>') %}
+                    <div class="form-group {{ error ? 'has-error' : '' }}">
+                        <label for="email">Email:</label>
+                        <div class="input-group">
+  									<span class="input-group-addon">
+  										<i class="glyphicon glyphicon-user"></i>
+  									</span>
+                            <input type="email" name="email" value="{{ set_value('email') }}" id="email"
+                                   class="form-control">
+                        </div>
+                        {{ error|raw }}
+                    </div>
+                    {% set error = form_error("first_name", "<p class='text-danger'>", '</p>') %}
+                    <div class="form-group {{ error ? 'has-error' : '' }}">
+                        <label for="first_name">Voornaam:</label>
+                        <div class="input-group">
+  									<span class="input-group-addon">
+  										<i class="glyphicon glyphicon-user"></i>
+  									</span>
+                            <input type="text" name="first_name" value="{{ set_value('given_name') }}" id="first_name"
+                                   class="form-control">
+                        </div>
+                        {{ error|raw }}
+                    </div>
+                    {% set error = form_error("last_name", "<p class='text-danger'>", '</p>') %}
+                    <div class="form-group {{ error ? 'has-error' : '' }}">
+                        <label for="last_name">Achternaam:</label>
+                        <div class="input-group">
+  									<span class="input-group-addon">
+  										<i class="glyphicon glyphicon-user"></i>
+  									</span>
+                            <input type="text" name="last_name" value="{{ set_value('last_name') }}" id="family_name"
+                                   class="form-control">
+                        </div>
+                        {{ error|raw }}
+                    </div>
+
+                    <input type="submit" value="Registreer" class="btn btn-primary">
+                    {{ form_close() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
