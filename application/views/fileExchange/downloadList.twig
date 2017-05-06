@@ -1,5 +1,6 @@
 {% for file in files %}
     <h4>Download</h4>
     <a href="download/{{ file.id }}">{{ file.file_name }}</a>
+    <a href="check/{{ file.id }}">Check file md5</a>
 {% endfor %}
 
