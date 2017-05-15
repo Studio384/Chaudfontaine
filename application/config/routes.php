@@ -65,7 +65,6 @@ $route['download'] = 'FileExchangeController/download';
 $route['download/(:num)'] = 'FileExchangeController/download/$1';
 $route['check/(:num)'] = 'FileExchangeController/fileCheck/$1';
 
-
 // HomeController
 $route['userdata'] = 'HomeController/userdata';
 $route['userdata/des'] = 'HomeController/des';
