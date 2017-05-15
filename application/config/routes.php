@@ -69,6 +69,7 @@ $route['check/(:num)'] = 'FileExchangeController/fileCheck/$1';
 // HomeController
 $route['userdata'] = 'HomeController/userdata';
 $route['userdata/des'] = 'HomeController/des';
+$route['home']='HomeController/index';
 
 
 // File_ExchangeController
