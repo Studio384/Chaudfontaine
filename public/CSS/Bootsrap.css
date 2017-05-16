@@ -2553,7 +2553,7 @@ output {
 .form-control {
     margin-left: 25px;
     display: block;
-    width: 100%;
+    width: 90%;
     height: 38px;
     padding: 8px 12px;
     font-size: 14px;
@@ -3842,7 +3842,7 @@ tbody.collapse.in {
     position: relative;
     z-index: 2;
     float: left;
-    width: 100%;
+    width: 90%;
     margin-bottom: 0;
 }
 .input-group .form-control:focus {
