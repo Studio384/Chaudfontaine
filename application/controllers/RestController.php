@@ -9,6 +9,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class RestController extends MY_Controller
 {
+    /**
+     * MY_Controller for more information
+     * @var string
+     */
+    protected $access = '*';
+
     public function get_users()
     {
         $input = trim($this->input->get('input', TRUE));

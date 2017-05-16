@@ -9,6 +9,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class HomeController extends MY_Controller
 {
+    /**
+     * MY_Controller for more information
+     * @var string
+     */
+    protected $access = '*';
+
     private $dir = 'home/';
 
     public function index()
@@ -16,14 +22,9 @@ class HomeController extends MY_Controller
         $this->display($this->dir . 'index');
     }
 
-    public function login(){
-        $this->display($this->dir.'Login');
-    }
-    public function userpage(){
-        $this ->display($this->dir.'Userpage');
-    }
-    public function createAccount(){
-        $this->display($this->dir.'CreateAccount');
+    public function page404()
+    {
+        $this->display($this->dir . 'page404');
     }
 
     public function userdata(){

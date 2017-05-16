@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'HomeController';
-$route['404_override'] = '';
+$route['404_override'] = 'HomeController/page404';
 $route['translate_uri_dashes'] = FALSE;
 
 // AuthController
@@ -58,12 +58,17 @@ $route['login'] = 'AuthController/login';
 $route['register'] ='AuthController/register';
 $route['activate/(:any)'] = 'AuthController/activate/$1';
 
+// UserController
+$route['logout'] = 'UserController/logout';
+
 // FileExchangeController
 $route['upload'] = 'FileExchangeController/upload';
-$route['rest/get_users'] = 'RestController/get_users';
 $route['download'] = 'FileExchangeController/download';
 $route['download/(:num)'] = 'FileExchangeController/download/$1';
 $route['check/(:num)'] = 'FileExchangeController/fileCheck/$1';
+
+// RestController
+$route['rest/get_users'] = 'RestController/get_users';
 
 // HomeController
 $route['userdata'] = 'HomeController/userdata';

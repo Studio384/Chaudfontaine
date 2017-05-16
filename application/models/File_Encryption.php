@@ -52,7 +52,7 @@ class File_Encryption extends CI_Model
                 // Save record to database
                 $dataDB = array(
                     'file_name' => $file,
-                    'origin_user_id' => '1',
+                    'origin_user_id' => $this->session->userdata('id'),
                     'destination_user_id' => $userInfo['id'],
                     'enc_key' => $key,
                     'file_hash' => $enc_hash,
@@ -111,7 +111,7 @@ class File_Encryption extends CI_Model
         if ($query->num_rows()) {
             $file = $query->row_array();
 
-            if ($origin_public_key = $this->get_user_public_key($file['origin_user_id'])) {
+            if ($origin_public_key = $this->get_user_information($file['origin_user_id'])['public_key']) {
                 // Load encryption models
                 $this->load->model('RSA_Encryption', 'RSA');
 
@@ -135,9 +135,9 @@ class File_Encryption extends CI_Model
     private function get_user_information($id)
     {
         if(!is_numeric($id))
-            $query = $this->db->query("SELECT public_key FROM users WHERE email='". $id ."';");
+            $query = $this->db->query("SELECT public_key, id FROM users WHERE email='". $id ."';");
         else
-            $query = $this->db->query("SELECT public_key FROM users WHERE id='". $id ."';");
+            $query = $this->db->query("SELECT public_key, id FROM users WHERE id='". $id ."';");
 
         if($query->num_rows())
         {

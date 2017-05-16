@@ -1,27 +1,127 @@
 {% extends "master.twig" %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-md-6 col-xs-10 col-md-offset-3 col-xs-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Upload</strong>
+                </div>
+                <div class="panel-body">
+                    {% set error = error %}
+                    <div class="alert alert-{{ error ? 'warning' : 'info' }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        {% if error %}
+                            {% for string in error %}
+                                {{ string }}
+                            {% endfor %}
+                        {% else %}
+                            Bestanden verzenden
+                        {% endif %}
+                    </div>
 
-    {% set error = error %}
-    <div class="alert alert-{{ error ? 'warning' : 'info' }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>
-        {{ error ? error : "Bestanden verzenden" }}
+                    {{ form_open('',{'enctype': 'multipart/form-data'}) }}
+                    {% set error = form_error("users", "<p class='text-danger'>", '</p>') %}
+                    <div class="form-group {{ error ? 'has-error' : '' }}">
+                        <label for="users">Users</label>
+                        <div class="input-group">
+  									<span class="input-group-addon">
+  										<i class="glyphicon glyphicon-user"></i>
+  									</span>
+                            <input type="text" name="users" id="users" autocomplete="on" class="form-control"/>
+                        </div>
+                        {{ error|raw }}
+                    </div>
+                    {% set error = form_error("file", "<p class='text-danger'>", '</p>') %}
+                    <div class="form-group {{ error ? 'has-error' : '' }}">
+                        <label for="file">Zip File</label>
+                        <div class="input-group">
+  									<span class="input-group-addon">
+  										<i class="glyphicon glyphicon-file"></i>
+  									</span>
+                            <input type="file" name="file" id="file" class="form-control"/>
+                        </div>
+                        {{ error|raw }}
+                    </div>
+                    {% set error = form_error("privateKey", "<p class='text-danger'>", '</p>') %}
+                    <div class="form-group {{ error ? 'has-error' : '' }}">
+                        <label for="privateKey">Private key</label>
+                        <div class="input-group">
+  									<span class="input-group-addon">
+  										<i class="glyphicon glyphicon-lock"></i>
+  									</span>
+                            <textarea name="privateKey" id="privateKey" cols="30" rows="10"
+                                      class="form-control"></textarea>
+                        </div>
+                        {{ error|raw }}
+                    </div>
+                    <input type="submit" value="Verzenden" class="btn btn-primary">
+                    {{ form_close() }}
+                </div>
+            </div>
+        </div>
     </div>
-
-    {{ form_open('',{'enctype': 'multipart/form-data'}) }}
-    File <input type="file" name="file"/><br><br>
-    Key <textarea name="privateKey" id="" cols="30" rows="10"></textarea>
-    <br><br><br>
-    <input type="text" name="users" id="users" autocomplete="on"/>
-    <input type="submit" name="Verzenden">
-    {{ form_close() }}
 
 
 {% endblock %}
 
+{% block stylesheet %}
+    <style type="text/css">
+        .ui-autocomplete {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            float: left;
+            display: none;
+            min-width: 160px;
+            padding: 4px 0;
+            margin: 0 0 10px 25px;
+            list-style: none;
+            background-color: #ffffff;
+            border-color: #ccc;
+            border-color: rgba(0, 0, 0, 0.2);
+            border-style: solid;
+            border-width: 1px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding;
+            background-clip: padding-box;
+            *border-right-width: 2px;
+            *border-bottom-width: 2px;
+        }
+
+        .ui-menu-item > a.ui-corner-all {
+            display: block;
+            padding: 3px 15px;
+            clear: both;
+            font-weight: normal;
+            line-height: 18px;
+            color: #555555;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .ui-state-hover, .ui-state-active {
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #0088cc;
+            border-radius: 0px;
+            -webkit-border-radius: 0px;
+            -moz-border-radius: 0px;
+            background-image: none;
+        }
+    </style>
+{% endblock %}
+
+
 {% block jsScript %}
-    <script src="{{ base_url('js/jquery-3.2.1.min.js') }}"></script>
     <script src="{{ base_url('js/jquery-ui.min.js') }}"></script>
     <script>
         $(function () {
@@ -44,7 +144,10 @@
                 .autocomplete({
                     minLength: 0,
                     source: function (request, response) {
-                        $.getJSON("{{ base_url('rest/get_users') }}", {term: extractLast(request.term), input: $('#users').val()}, response);
+                        $.getJSON("{{ base_url('rest/get_users') }}", {
+                            term: extractLast(request.term),
+                            input: $('#users').val()
+                        }, response);
                     },
                     focus: function () {
                         // prevent value inserted on focus

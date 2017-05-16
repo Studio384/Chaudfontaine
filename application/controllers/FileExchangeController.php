@@ -9,6 +9,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class FileExchangeController extends MY_Controller
 {
+    /**
+     * MY_Controller for more information
+     * @var string
+     */
+    protected $access = '@';
+
     private $dir = 'fileExchange/';
 
     public function upload()
@@ -26,12 +32,13 @@ class FileExchangeController extends MY_Controller
             // Settings for zip file upload
             $config['upload_path'] = './uploaded_files/';
             $config['allowed_types'] = 'zip';
+            $config['encrypt_name'] = true;
 
             $this->load->library('upload', $config);
 
             // Upload and encrypt zip file
             if (!$this->upload->do_upload('file')) {
-                $data['errors'][] = $this->upload->display_errors();
+                $data['error'][] = $this->upload->display_errors();
                 // File error
             } else {
                 $data = $this->upload->data();
@@ -42,27 +49,28 @@ class FileExchangeController extends MY_Controller
 
                 if ($result == EXIT_SUCCESS) {
                     // show success
-                    echo 'success';
+                    $this->session->set_flashdata('main_success', 'Zip bestand is correct verzonden.');
+                    redirect(base_url());
                 } else {
                     if ($result == EXIT_USER_INPUT) {
-                        $data['errors'][] = "Een user tussen de lijst bestaat niet.";
+                        $data['error'][] = "Een user tussen de lijst bestaat niet.";
                     }
 
                     if ($result == EXIT_ERROR) {
-                        $data['errors'][] = "Encryption failed, waarschijnlijk een verkeerde private key.";
+                        $data['error'][] = "Encryption failed, waarschijnlijk een verkeerde private key.";
                     }
 
                     // 1 or more errors --> delete file on server
                     if ($this->delete($file_path) == EXIT_ERROR) {
-                        $data['errors'][] = "Probleem met file te deleten.";
+                        $data['error'][] = "Probleem met file te deleten.";
                     } else {
-                        $data['errors'][] = "file deleted succesfuly.";
+                        $data['error'][] = "file deleted succesfuly.";
                     }
                 }
             }
             // Ending zip file upload
         }
-        if (isset($data['errors'])) {
+        if (isset($data['error'])) {
             $this->display($this->dir . 'uploadErrors', $data);
         } else {
             $this->display($this->dir . 'upload');
@@ -82,17 +90,17 @@ class FileExchangeController extends MY_Controller
                 $result = $this->file->decrypt($file_id, $my_private_key);
 
                 if ($result == EXIT_SUCCESS) {
-                    // show success
-                    echo 'success';
+                    $this->session->set_flashdata('main_success', 'Download successfull');
+                    redirect(base_url('download'));
                 } elseif ($result == EXIT_USER_INPUT) {
-                    // File not found
+                    $data['error'] = "Probleem met private key.";
                 } elseif ($result == EXIT_ERROR) {
-                    // Decryption error (error in code or wrong keys) 90% = wrong key
+                    $data['error'] = "Probleem met private key.";
                 }
             }
-            $this->display($this->dir . 'download');
+            $this->display($this->dir . 'download', (isset($data)) ? $data : array());
         } else {
-            $this->db->where('destination_user_id', 0);
+            $this->db->where('destination_user_id', $this->session->userdata('id'));
             $data['files'] = $this->db->get('file_exchange')->result_array();
 
             $this->display($this->dir . 'downloadList', $data);
@@ -110,12 +118,14 @@ class FileExchangeController extends MY_Controller
             $result = $this->file->fileCheck($file_id, $my_hash);
 
             if ($result == EXIT_SUCCESS) {
-                // show success
-                echo 'success';
+                $this->session->set_flashdata('main_success', 'MD5 sleutel is hetzelfde dan op de server.');
+                redirect(base_url('download'));
             } elseif ($result == EXIT_ERROR) {
-                echo 'test';
+                $data['error'] = 'Dit bestand is niet hetzelfde dan op de server.';
             }
         }
+
+        $this->display($this->dir . 'fileCheck', (isset($data)) ? $data : array());
     }
 
     private function delete($file)

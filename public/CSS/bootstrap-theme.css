@@ -1,0 +1,185 @@
+/*!
+ * Bootstrap v3.3.6 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    background: #F1F1F1;
+    height: 100%;
+}
+
+.wrapper {
+    position: relative;
+    min-height: 100%;
+    height: auto;
+}
+
+.navbar-default {
+    background-color: #229547;
+    border-radius: 4px;
+
+    -webkit-box-shadow: 0 15px 40px 0 #114a23;
+    -moz-box-shadow: 0 15px 40px 0 #114a23;
+    box-shadow: 0 15px 40px 0 #114a23;
+
+    border-bottom: none;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .active > a {
+    color: white;
+    background-color: #229547;
+    -webkit-box-shadow: inset 0 3px 9px rgba(0, 0, 0, .25);
+    box-shadow: inset 0 3px 9px rgba(0, 0, 0, .25);
+}
+
+.dropdown-menu>li>a, .navbar-nav > li > .dropdown-menu, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    color: white;
+    background-color: #229547;
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover, .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    color: white;
+    background-color: #114a23;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a {
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+    color: whitesmoke;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: white;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #114a23;
+}
+
+.navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
+    color: skyblue;
+}
+
+.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
+    color: skyblue;
+}
+
+.content {
+    padding-top: 100px;
+}
+
+.background-home {
+    padding-bottom: 100px;
+    background: url("../img/home_grey.jpg") no-repeat center;
+    background-size: cover;
+    min-height: 800px;
+    min-height: 100vh;
+}
+
+.well {
+    background-color: white;
+}
+
+.well-home {
+    background-color: rgba(255, 255, 255, 0.7);
+    min-height: 550px;
+}
+
+.well-events a {
+    color: darkgreen;
+}
+
+.well-events-active {
+    border-color: darkred;
+    -moz-box-shadow:    inset 0 0 10px red;
+    -webkit-box-shadow: inset 0 0 10px red;
+    box-shadow:         inset 0 0 10px red;
+}
+
+.calendar-home {
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid black;
+    box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+.form-control-red {
+    background: #4eaa6b;
+    border-color: darkgreen;
+    color: white;
+}
+
+.form-control-red::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    white;
+}
+.form-control-red:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    white;
+    opacity:  1;
+}
+.form-control-red::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    white;
+    opacity:  1;
+}
+.form-control-red:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color:    white;
+}
+
+.panel-default > .panel-heading {
+    background-color: #229547;
+    color: white;
+    border: none;
+}
+
+.panel {
+    border: none;
+}
+
+.jumbotron {
+    background: #5C755E;
+}
+
+.page-header {
+    color: white;
+}
+
+.text-danger {
+    color: #990033;
+}
+
+.master-body {
+    padding-bottom: 250px;
+}
+
+.master-footer {
+    position: absolute;
+    bottom: 0;
+    height: 200px;
+    width: 100%;
+    background: #229547;
+    color: white;
+    border-top: 2px solid #114a23;
+    padding-top: 10px;
+}
+
+.fixed-footer {
+    position:fixed;
+    left:0;
+    bottom:0;
+    height:80px;
+    width:100%;
+    background: #229547;
+    color: white;
+}

@@ -2,6 +2,12 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class AuthController extends MY_Controller {
+    /**
+     * MY_Controller for more information
+     * @var string
+     */
+    protected $access = '/';
+
     private $dir = 'auth/';
 
     // Validate login data
@@ -24,7 +30,7 @@ class AuthController extends MY_Controller {
             } elseif ($status == EXIT_SUCCESS) {
                 $this->session->set_userdata($this->auth->get_data());
 
-                $this->session->set_flashdata('main_success', $this->lang->line('login_success'));
+                $this->session->set_flashdata('main_success', 'Welkom u bent nu aangemeld.');
                 redirect(base_url());
             }
         }
