@@ -32,7 +32,6 @@ class FileExchangeController extends MY_Controller
             // Settings for zip file upload
             $config['upload_path'] = './uploaded_files/';
             $config['allowed_types'] = 'zip';
-            $config['encrypt_name'] = true;
 
             $this->load->library('upload', $config);
 
